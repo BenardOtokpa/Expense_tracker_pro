@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const express = require('express')
 const errorHandler = require('./handler/errorHandler')
 const userRoutes = require('./modules/users/users.routes')
+const transactionRoutes = require('./modules/transactions/transactions.routes')
 
 const app = express()
 
@@ -18,12 +19,14 @@ mongoose
   })
 
 //Model initialization
-require('./models/users.model')
+require('./models/users.model');
+require('./models/tranactions.model')
 
 app.use(express.json())
 
 //Routes..
 app.use('/api/users', userRoutes)
+app.use('/api/transactions', transactionRoutes)
 
 // End of all routes...
 app.use(errorHandler)

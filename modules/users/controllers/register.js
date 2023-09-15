@@ -1,5 +1,8 @@
+/* eslint-disable no-throw-literal */
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const jwtManager = require('../../../managers/jwtManager')
+
 
 const register = async (req, res) => {
   const usersModel = mongoose.model('users')
@@ -22,16 +25,19 @@ const register = async (req, res) => {
 const hashedPassword = await bcrypt.hash(password, 12)
 
 
-  await usersModel.create({
+  const createdUser = await usersModel.create({
     name: name,
     email: email,
     password: hashedPassword,
     balance: balance,
   })
 
+  const accessToken = jwtManager(createdUser)
+
   res.status(201).json({
     staus: 'Success!',
-    massage: 'Useer regsitered successfully!',
+    massage: 'User regsitered successfully!',
+    accessToken: accessToken
   })
 }
 

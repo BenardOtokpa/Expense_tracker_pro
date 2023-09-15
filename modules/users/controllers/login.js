@@ -1,6 +1,7 @@
+/* eslint-disable no-throw-literal */
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-cpnst jsonwebtoken = require('jsonwebtoken')
+const jwtManager = require('../../../managers/jwtManager')
 
 const login = async (req, res) => {
   const usersModel = mongoose.model('users')
@@ -14,19 +15,16 @@ const login = async (req, res) => {
 
   const comparePassword = await bcrypt.compare(password, getUser.password)
 
-  console.log(getUser.password);
+  console.log(getUser.password)
   if (!comparePassword) throw 'Email and Password do not match!'
 
-  const accessToken = jsonwebtoken.sign({
-    
-  })
-
-
+  const accessToken = jwtManager(getUser)
 
   //succees response..
   res.status(200).json({
     status: 'Sucess!',
     message: 'Login Successfull!',
+    accessToken: accessToken,
   })
 }
 
